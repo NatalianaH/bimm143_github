@@ -1,0 +1,284 @@
+---
+title: "Class 5: Data Viz w/ggplot"
+author: "Nataliana (PID: A17096549)"
+format: pdf
+---
+
+## Plotting in R
+
+R has lots of ways to make plots and figures. This includes so-called **base** graphics and packages like **ggplot2**
+
+```{r}
+plot(cars) 
+```
+
+
+This is a **base** R plot of the in-built `cars` dataset that has only two columns:
+
+```{r}
+cars
+```
+
+
+> Q. How would we plot this wee dataset with **ggplot2**?
+
+All ggplot figures have at least 3 layers:
+
+- **data**
+- **aes** (how the data map to the plot)
+- **geoms** (how we draw the plot, lines, points, etc.)
+
+Before I use any new package I need to download and install it with the `install.packages()` command.
+
+I never use `install.packages()` within my quarto document otherwise I will install the package over and over and over again - which is silly!
+
+Once a package is installed I can load it up with the `library()` function.
+
+```{r}
+# install.packages("ggplot2")
+library(ggplot2)
+ggplot(cars) +
+  aes(x=speed, y=dist) +
+  geom_point()
+```
+
+
+
+Key-point: For simple plots (like the one above) ggplot is more verbose (we need to do more typing) but as plots get more complicated ggplot starts to be more clear and simple than base R plot()
+
+```{r}
+ggplot(cars) +
+  aes(speed, dist) +
+  geom_point() +
+  geom_smooth(method= "lm", se=FALSE) +
+  labs(title="Stopping distance of old cars",
+       subtitle = "From the in-built cars dataset") +
+  theme_bw()
+```
+
+
+>Q2. True or False? The ggplot2 package comes already installed with R?
+
+FALSE
+
+>Q3.
+
+```{r}
+url <- "https://bioboot.github.io/bimm143_S20/class-material/up_down_expression.txt"
+genes <- read.delim(url)
+head(genes)
+```
+
+>Q. Use the nrow() function to find out how many genes are in this dataset. What is your answer?
+
+```{r}
+nrow(genes)
+```
+
+>Q. Use the colnames() function and the ncol() function on the genes data frame to find out what the column names are (we will need these later) and how many columns there are. How many columns did you find?
+
+```{r}
+colnames(genes)
+ncol(genes)
+```
+
+>Q. Q. Use the table() function on the State column of this data.frame to find out how many ‘up’ regulated genes there are. What is your answer?
+
+```{r}
+table(genes$State)
+```
+
+>Q. Using your values above and 2 significant figures. What fraction of total genes is up-regulated in this dataset?
+
+```{r}
+round( table(genes$State)/nrow(genes) * 100, 2 )
+```
+
+>Q. Complete the code below to produce the following plot
+
+A first plot:
+
+```{r}
+p <- ggplot(genes) +
+  aes(Condition1, Condition2, col=State) +
+  geom_point()
+p  
+```
+
+
+Change the default color scaleby adding another layer to explicitly specifcy our color scale.
+
+```{r}
+p + scale_color_manual(values=c("blue","gray","red"))
+```
+
+
+>Q. Nice, now add some plot annotations to the p object with the labs() function so your plot looks like the following:
+
+```{r}
+p + scale_color_manual(values=c("blue","gray","red"))+
+  labs(title="Gene Expression Changes Upon Drug Treatment",
+           x="Control (no drug)",
+           y="Drug Treatment")
+
+```
+
+
+```{r}
+# File location online
+url <- "https://raw.githubusercontent.com/jennybc/gapminder/master/inst/extdata/gapminder.tsv"
+
+gapminder <- read.delim(url)
+```
+
+
+```{r}
+# install.packages("dplyr")
+library(dplyr)
+
+gapminder_2007 <- gapminder %>% filter(year==2007)
+```
+
+
+
+```{r}
+ggplot(gapminder_2007) + 
+  aes(x=gdpPercap,y=lifeExp) +
+  geom_point()
+```
+
+```{r}
+ggplot(gapminder_2007) +
+  aes(x=gdpPercap,y=lifeExp) +
+  geom_point(alpha=0.5)
+```
+
+```{r}
+ggplot(gapminder_2007) +
+  aes(x=gdpPercap,y=lifeExp,color=continent, size=pop) +
+  geom_point(alpha=0.5)
+```
+
+```{r}
+ggplot(gapminder_2007) + 
+  aes(x = gdpPercap, y = lifeExp, color = pop) +
+  geom_point(alpha=0.8)
+```
+
+
+```{r}
+ggplot(gapminder_2007) + 
+  geom_point(aes(x = gdpPercap, y = lifeExp,
+                 size = pop), alpha=0.5) + 
+  scale_size_area(max_size = 10)
+```
+
+```{r}
+# File location online
+url <- "https://raw.githubusercontent.com/jennybc/gapminder/master/inst/extdata/gapminder.tsv"
+
+gapminder <- read.delim(url)
+```
+
+
+```{r}
+library(dplyr)
+
+gapminder_1957 <- gapminder %>% filter(year==1957)
+```
+
+
+>Q. Can you adapt the code you have learned thus far to reproduce our gapminder scatter plot for the year 1957? What do you notice about this plot is it easy to compare with the one for 2007?
+
+
+```{r}
+ggplot(gapminder_1957) +
+  aes(x = gdpPercap, y = lifeExp, color = continent, size = pop) + 
+  geom_point(alpha=0.7) +
+  scale_size_area(max_size = 10)
+```
+
+>Q. Do the same steps above but include 1957 and 2007 in your input dataset for ggplot(). You should now include the layer facet_wrap(~year) to produce the following plot:
+
+```{r}
+gapminder_1957 <- gapminder %>% filter(year==1957 | year==2007)
+
+ggplot(gapminder_1957) + 
+  geom_point(aes(x = gdpPercap, y = lifeExp, color=continent,
+                 size = pop), alpha=0.7) + 
+  scale_size_area(max_size = 10) +
+  facet_wrap(~year)
+```
+
+
+>Q. How many years are in this dataset?
+
+```{r}
+length(gapminder$year)
+```
+
+```{r}
+table(gapminder$year)
+```
+
+```{r}
+unique(gapminder$year)
+```
+
+```{r}
+length( unique(gapminder$year) )
+```
+
+```{r}
+library(dplyr)
+```
+
+>Q. Extract data for the US in 1992
+
+```{r}
+filter(gapminder, country=="United States", year=="1992")
+```
+
+>Q. What was the population of Ireland in the last year we have data for?
+
+```{r}
+filter(gapminder, country=="Ireland", year=="2007")
+```
+
+>Q. What countries in the data set had a population smaller than Ireland in 2007?
+
+- First limit/subset the dataset to the year 2007
+```{r}
+gap07 <- filter(gapminder, year=="2007")
+```
+
+- Then find the `pop` value for Ireland
+```{r}
+ire_pop <- filter(gap07, country=="Ireland")["pop"]
+ire_pop
+```
+
+- Then extract all rows with `pop` less than Ireland's
+
+```{r}
+filter(gap07, pop < 4109086)
+```
+
+
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this 
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).

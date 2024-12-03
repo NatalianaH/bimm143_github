@@ -1,0 +1,319 @@
+---
+title: "Class 6: R functions"
+author: "Nataliana A17096549"
+format: pdf
+---
+
+Today we are going to explore R functions and begin to think about writing our own functions.
+
+Let's start simple and write our first function to add some numbers.
+
+Every function in R has at least 3 things:
+
+- a **name**, we pick this
+- one or more input **arguments**
+- the **body**, where the work gets done.
+
+
+
+```{r}
+add <- function(x, y=1, z=0) {
+  x + y + z
+}
+```
+
+Now lets try it out
+
+```{r}
+add(10,1)
+```
+
+
+```{r}
+add(c(10,1,1,10),1)
+```
+```{r}
+add(10)
+add(10,10)
+add(10,10,20)
+```
+```{r}
+mean( c(10,10,NA), na.rm=T )
+```
+```{r}
+# add("nat")
+```
+
+
+>Q1. Write a function grade() to determine an overall grade from a vector of student homework assignment scores dropping the lowest single score. If a student misses a homework (i.e. has an NA value) this can be used as a score to be potentially dropped. Your final function should be adquately explained with code comments and be able to work on an example class gradebook such as this one in CSV format: “https://tinyurl.com/gradeinput” [3pts]
+
+```{r}
+# Example input vectors to start with
+student1 <- c(100, 100, 100, 100, 100, 100, 100, 90)
+student2 <- c(100, NA, 90, 90, 90, 90, 97, 80)
+student3 <- c(90, NA, NA, NA, NA, NA, NA, NA)
+```
+
+Begin by calculating the average for student1
+```{r}
+student1
+mean(student1)
+```
+
+
+```{r}
+student2
+mean(student2, na.rm=TRUE)
+```
+
+```{r}
+student3
+mean(student3, na.rm=T)
+```
+
+Hmm...this sucks! I need to try something else and come back to this issue of missing values (NAs).
+
+We also want to drop the lowest score from a given students set of scores.
+
+```{r}
+student1
+```
+
+```{r}
+student1[-8]
+```
+
+We can try the `min()` function to find the lowest score
+
+```{r}
+min(student1)
+```
+
+I want to find the location of the min value not the value itself. For this I can use `which.min()`
+
+```{r}
+student1
+which.min(student1)
+```
+
+Let's put these two things together
+
+```{r}
+which.min(student1)
+student1[-8]
+```
+
+```{r}
+student1[-which.min(student1)]
+```
+
+```{r}
+mean( student1[-which.min(student1)] )
+```
+
+
+```{r}
+min.ind <- which.min(student1)
+mean( student1[-min.ind] )
+```
+
+We need to deal with NA (missing values) somehow?...
+
+One idea is we make all the NA values zero.
+
+```{r}
+x <- student2
+x
+x[2] <- 0
+x
+```
+
+```{r}
+x <- student2
+x
+x[ is.na(x) ]
+```
+
+
+```{r}
+x <- student2
+x
+x[ !is.na(x) ]
+```
+
+```{r}
+x <- student2
+x
+x[ is.na(x) ] = 0
+x
+```
+
+So far we have a working snippet:
+
+```{r}
+x <- student2
+## Finds NAs in 'x' and make them 0
+x[ is.na(x) ] <- 0
+
+# finds the min value and removes it before getting mean
+mean( x[-which.min(x)] )
+```
+x is the input, body is the lines
+
+Now turn it into a function
+
+```{r}
+grade <- function(x) {
+## Finds NAs in 'x' and make them 0
+x[ is.na(x) ] <- 0
+
+# drop lowest value and find mean
+mean( x[-which.min(x)] )
+}
+```
+
+
+```{r}
+grade(student1)
+grade(student2)
+grade(student3)
+```
+
+In apply functions, (X, MARGIN, and FUN) don't have defaults, need to be defined
+
+apply(x=dataset,[], Grade=function)
+
+- need to figure out the margin function
+
+- Margin specifies the dimensions to apply the function over
+
+
+>Q1. Main function:
+
+Now `apply()` to our class gradebook:
+
+```{r}
+gradebook <- read.csv("https://tinyurl.com/gradeinput",
+                      row.names = 1)
+head(gradebook)
+```
+
+Apply(x=gradebook, 1 or 2, grade=function)
+
+To use the `apply()` function on this `gradebook` data set I need to decide whether I want to "apply" the `grade()` function over the rows (1) or columns (2) of the `gradebook`
+
+```{r}
+apply(gradebook, 1, grade)
+```
+
+
+```{r}
+ans <- apply(gradebook, 1, grade)
+```
+
+>Q2. Using your grade() function and the supplied gradebook, Who is the top scoring student overall in the gradebook? [3pts]
+
+```{r}
+which.max(ans)
+
+ans[which.max(ans)]
+```
+
+>Q3. From your analysis of the gradebook, which homework was toughest on students (i.e. obtained the lowest scores overall?
+
+```{r}
+which.min(apply(gradebook, 2, grade))
+```
+
+
+```{r}
+apply(gradebook, 2, mean, na.rm=T)
+```
+
+```{r}
+masked_gradebook <- gradebook
+masked_gradebook[ is.na(masked_gradebook)] = 0
+apply(masked_gradebook, 2, mean)
+```
+
+I could modify the `grade()` function to do this too - i.e. not drop the lowest options
+
+
+```{r}
+grade2 <- function(x, drop.low=TRUE) {
+  
+    ## Finds NAs in 'x' and make them 0
+    x[ is.na(x) ] <- 0
+    
+    if(drop.low) {
+      cat("Hello low")
+      # Drop lowest value and find mean
+      out <- mean( x[-which.min(x)] )
+    } else {
+      out <- mean(x)
+      cat("No low")
+    }
+    return(out)
+}
+```
+```{r}
+grade2(student1, TRUE)
+```
+
+>Q4. Optional Extension: From your analysis of the gradebook, which homework was most predictive of overall score (i.e. highest correlation with average grade score)? [1pt]
+
+The function to calculate correlations in R is called `cor()`
+
+```{r}
+x <- c(100, 90, 80, 100)
+y <- c(100, 90, 80, 100)
+z <- c(80, 90, 100, 10)
+
+cor(x,y)
+cor(x,z)
+```
+
+```{r}
+cor(ans, masked_gradebook$hw1)
+```
+
+```{r}
+cor(ans, masked_gradebook$hw2)
+```
+
+```{r}
+cor(ans, masked_gradebook$hw3)
+```
+
+Can input each homework manually, or use the apply function to assess all homeworks at once.
+
+
+I want to `apply()` the `cor()` function over the `masked_gradebook` and use the `ans` scores for the class
+
+```{r}
+apply(masked_gradebook, 2, cor, y=ans)
+```
+
+**Main takeaway:** Can use the apply function to write our own functions, or take existing functions and apply it over entire datasets
+
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this 
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
