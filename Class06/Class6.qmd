@@ -1,7 +1,7 @@
 ---
 title: "Class 6: R functions"
 author: "Nataliana A17096549"
-format: pdf
+format: gfm
 ---
 
 Today we are going to explore R functions and begin to think about writing our own functions.
