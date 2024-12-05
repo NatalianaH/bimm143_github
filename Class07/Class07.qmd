@@ -1,7 +1,7 @@
 ---
 title: "Class 7: Machine Learning I"
 author: "Nataliana Hernandez PID: A17096549"
-format: pdf
+format: gfm
 ---
 
 Today we are going to learn how to apply different machine learning methods, beginning with clustering:
