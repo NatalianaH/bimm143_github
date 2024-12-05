@@ -1,0 +1,41 @@
+---
+title: "Class 12: PDF Walkthrough (non-homework)"
+format: html
+---
+
+
+# Section 1. Proportion of G/G in a population
+
+Downloaded a CSV file from Ensemble 
+
+Here we rea this CSV file
+
+```{r}
+mxl <- read.csv("373531-SampleGenotypes-Homo_sapiens_Variation_Sample_rs8067378.csv")
+head(mxl)
+```
+
+```{r}
+table(mxl$Genotype..forward.strand.)
+```
+
+```{r}
+table(mxl$Genotype..forward.strand.) / nrow(mxl) * 100
+```
+
+>Q5. 
+
+- 14.0625 percent
+
+>Q6. 
+
+- G|G
+
+
+This variant that is associated with childhood asthma is more frequent in the GBR population than the MXL population
+
+Let's now dig into this further
+
+
+
+
