@@ -13,5 +13,5 @@ Classwork for [BIMM143 F24](https://bioboot.github.io/bimm143_F24/) at UC San Di
 - Class 14: [RNA-Seq analysis mini-project](https://github.com/NatalianaH/bimm143_github/blob/main/Class14/Class14.md)
 - Class 15: [Mini Project: Investigating Pertussis Resurgence](https://github.com/NatalianaH/bimm143_github/blob/main/Class15/Class15.md)
 - Class 16: Essential UNIX for bioinformatics
-- Class 17: [Analyzing sequencing data in the cloud]
+- Class 17: [Analyzing sequencing data in the cloud](https://github.com/NatalianaH/bimm143_github/blob/main/Class17/Class17.md)
 - Class 18: Hands-on with Git and GitHub
