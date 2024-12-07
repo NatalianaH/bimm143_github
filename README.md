@@ -7,11 +7,11 @@ Classwork for [BIMM143 F24](https://bioboot.github.io/bimm143_F24/) at UC San Di
 - Class 7 [Introduction to machine learning for Bioinformatics](https://github.com/NatalianaH/bimm143_github/blob/main/Class07/Class07.md)
 - Class 8 [Unsupervised Learning Mini-Project](https://github.com/NatalianaH/bimm143_github/blob/main/Class08/Class08_mini_project.html)
 - Class 9 [Structural Bioinformatics (pt1)](https://github.com/NatalianaH/bimm143_github/blob/main/Class09/Class09.html)
-- Class 10 []
-- Class 12
-- Class 13
-- Class 14
-- Class 15
-- Class 16
-- Class 17
-- Class 18
+- Class 10 [Halloween Candy Mini-Project]
+- Class 12 [Genome informatics]
+- Class 13 [Transcriptomics and the analysis of RNA-Seq data]
+- Class 14 [RNA-Seq analysis mini-project]
+- Class 15 [Mini Project: Investigating Pertussis Resurgence]
+- Class 16 [Essential UNIX for bioinformatics]
+- Class 17 [Analyzing sequencing data in the cloud]
+- Class 18 [Hands-on with Git and GitHub]
